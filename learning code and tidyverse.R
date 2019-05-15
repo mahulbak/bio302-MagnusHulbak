@@ -40,7 +40,29 @@ iris %>% group_by(Species) %>%
   summarise(mean_petal_length=mean(Petal.Length), sd_petal_length=sd(Petal.Length))#lage nye navn og summerer snitt og standardavvik for Petal Length
 
 iris %>% group_by(Species) %>% 
-  mutate(max_petal_length=mean(Petal.Length))
+  mutate(max_petal_length=mean(Petal.Length)) %>% 
+ungroup()
+
+iris %>% arrange(Petal.Length)
+iris %>% arrange(desc(Petal.Length))#arranger fra største til minste
+
+iris %>% group_by(Species) %>% arrange(Petal.Length) %>% slice(1:3)#i gruppen species arrangerer vi for petal length og klipper ut rad 1-3. 
+
+iris %>% group_by(Species) %>% nest() %>% 
+  mutate(mod=map(data,~lm(Sepal.Length~Sepal.Width, data=.))) %>% 
+  mutate(coef=map(mod, broom::tidy)) %>% 
+unnest(coef)
 
 
+iris %>% 
+  rownames_to_column() %>% 
+  gather(key=variable, value=measurement,-Species, -rowname) %>% 
+  group_by(Species, variable) %>% 
+  summarise(mean=mean(measurement)) %>% 
+  ggplot(aes(x=variable, y=measurement, fill=Species))+geom_violin() 
+  
 
+iris %>% 
+  rownames_to_column() %>% 
+  gather(key=variable, value=measurement,-Species, -rowname) %>% 
+  ggplot(aes(x=variable, y=measurement, fill=Species))+geom_violin() 
