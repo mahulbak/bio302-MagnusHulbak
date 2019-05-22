@@ -1,0 +1,74 @@
+---
+title: "spatial and temporal"
+author: "Magnus Hulbak"
+date: "22 5 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyverse)
+```
+
+simulate a 100-observation autocorrelated timeseries with arima.sim with a first order autoregressive coefficient of 0.5. Also make a time vector of 1:100. plot the data
+
+```{r}
+y  <- arima.sim(n=100,list(ar=c(.5)))  
+ts <-1:100  
+plot(y)
+
+```
+
+
+regress the timeseries against time with an OLS(ordinary least squares/linear) model. Does the model appear to be statistically significant?
+
+```{r}
+ols_mod<- lm(y~ts)
+summary(ols_mod)
+```
+
+Answer: NO, the model does not appear to be statistically significant.
+
+4) Plot the model diagnostics, including an acf() and pacf
+
+```{r}
+plot(ols_mod)
+
+```
+
+```{r}
+residuals(ols_mod)
+
+```
+
+```{r}
+acf(residuals(ols_mod))
+
+```
+
+```{r}
+pacf(residuals(ols_mod))
+```
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
